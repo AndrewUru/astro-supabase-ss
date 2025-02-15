@@ -11,17 +11,82 @@ const userData = await getUser({ accessToken, refreshToken })
 const isLoggedIn = !!userData
 ---
 
+
 <Layout title="Home" isLoggedIn={isLoggedIn}>
   <Nav activeUrl="home" isLoggedIn={isLoggedIn} />
-  
-  <h1>¡Bienvenido a la página principal!</h1>
-  <p>Aquí puedes poner cualquier contenido que desees, en lugar del readme.md.</p>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Bienvenido a la página principal</h1>
+      <p>
+        Explora las funcionalidades de nuestra aplicación y descubre todo lo que
+        podemos ofrecerte. ¡Disfruta de una experiencia moderna y atractiva!
+      </p>
+      <button class="cta-button">¡Comienza Ahora!</button>
+    </div>
+  </section>
 </Layout>
 
 <style is:global>
-  /* Tus estilos globales (opcional) */
-  h1 {
-    font-size: 2rem;
+  /* Reset básico (opcional) */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+		display: flex;
+		align-items: center;
+    justify-content: center;
+    color: #333;
+  }
+
+  /* Hero section */
+  .hero {
+    display: flex;
+		width: 100vw;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px); /* Ajusta si tu Nav mide ~60px */
+    background: linear-gradient(135deg, #723af9 0%, #f5f7fa 100%);
+  }
+
+  .hero-content {
+    max-width: 700px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3); /* Filtro oscuro para destacar texto */
+    color: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(6px);
+  }
+
+  .hero-content h1 {
+    font-size: 3rem;
     margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .hero-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .cta-button {
+    background-color: #ffbe0b;
+    color: #333;
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .cta-button:hover {
+    background-color: #ffd60a;
   }
 </style>

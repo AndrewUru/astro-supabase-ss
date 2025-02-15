@@ -18,110 +18,194 @@ if (!userData) {
 ---
 
 <Layout title="Profile" isLoggedIn={true}>
-    <Nav activeUrl='profile' isLoggedIn={true} />
+  <Nav activeUrl="profile" isLoggedIn={true} />
 
-    <h2> Profile </h2>
-    <form>
-        <input type='hidden' id='id' name='id' value={ userData.id } >
-        <input type='hidden' id='avatar_url' name='avatar_url' value={ userData.avatar_url } >
-        <img id='avatar-image' />
+  <div class="profile-container">
+    <div class="profile-card">
+      <h2>Perfil</h2>
+      <form class="profile-form">
+        <!-- Campos ocultos -->
+        <input type="hidden" id="id" name="id" value={userData.id}>
+        <input type="hidden" id="avatar_url" name="avatar_url" value={userData.avatar_url}>
 
-        <div>
-            <input
-                type="file"
-                id="avatar"
-                accept="image/*"
-            />
+        <!-- Avatar y cambio de foto -->
+        <div class="avatar-container">
+          <img id="avatar-image" class="avatar-image" alt="Foto de perfil" />
+          <label for="avatar" class="avatar-label">Cambiar foto</label>
+          <input type="file" id="avatar" accept="image/*" hidden />
         </div>
 
-         <div class='input-wrap'>
-             <label for='email'>email:</label>
-             <input disabled id='email' name='email' value={ userData.email } >    
-         </div>
-         <div class='input-wrap'>
-             <label for='username'>username:</label>
-             <input id='username' name='username' value={ userData.username } >
-         </div>
-         <div class='input-wrap'>
-             <label for='website'>website:</label>
-             <input id='website' name='website' value={ userData.website } >
-         </div>
-        <button>Submit</button>
-    </form>
+        <!-- Campos del formulario -->
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input disabled id="email" name="email" value={userData.email}>
+        </div>
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input id="username" name="username" value={userData.username}>
+        </div>
+        <div class="form-group">
+          <label for="website">Website:</label>
+          <input id="website" name="website" value={userData.website}>
+        </div>
+        <button type="submit">Actualizar perfil</button>
+      </form>
+    </div>
+  </div>
 </Layout>
-<style>
-.input-wrap {
-    display: flex;
-    gap: .5rem;
-    padding: .3rem 0;
-    align-items: center;
-    width: 30vw;
-    flex: 1
-}
-input{
-    height: 1rem;
-    flex: 1
-}
-img {
-    width: 40%
-}
-#avatar {
-    height: 1.6rem;
-}
 
+<style is:global>
+  /* Fuente y fondo global */
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+  }
+
+  /* Contenedor centrado */
+  .profile-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  /* Tarjeta de perfil */
+  .profile-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .profile-card h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+  }
+
+  /* Formulario en grid */
+  .profile-form {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  /* Avatar */
+  .avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .avatar-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #723af9;
+  }
+
+  .avatar-label {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #723af9;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  /* Grupos de formulario */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    color: #555;
+  }
+
+  .form-group input {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  /* Botón */
+  button[type="submit"] {
+    background-color: #723af9;
+    color: #fff;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #5e2ce6;
+  }
 </style>
+
 <script>
 import { supabase } from '../utils/supabaseBrowser'
-const form = document.querySelector('form') as HTMLFormElement
-const avatarImg = document.querySelector('#avatar-image') as HTMLImageElement
-const avatarUrl = document.querySelector('#avatar_url') as HTMLInputElement
-const avatarInput = document.querySelector('#avatar')  as HTMLInputElement
 
+// Seleccionar elementos
+const form = document.querySelector('form')
+const avatarImg = document.querySelector('#avatar-image')
+const avatarUrl = document.querySelector('#avatar_url')
+const avatarInput = document.querySelector('#avatar')
+
+// Manejo del submit del formulario para actualizar perfil
 form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-
-    const updates = Object.fromEntries(new FormData(e.target as HTMLFormElement).entries())
-
-    const res = await supabase.from('profiles').upsert(updates)
-    const {error} = res
-
-    if (error) {
-        alert(`Error ${JSON.stringify(error, null, 2)}`)
-    }
-
+  e.preventDefault()
+  const updates = Object.fromEntries(new FormData(e.target).entries())
+  const res = await supabase.from('profiles').upsert(updates)
+  const { error } = res
+  if (error) {
+    alert(`Error ${JSON.stringify(error, null, 2)}`)
+  }
 })
 
-const showImg = async (path: string) => {
-    const { data, error } = await supabase.storage.from('avatars').download(path)
-    if (error) {
-        alert(`Error ${JSON.stringify(error, null, 2)}`)
-    }
-    const downloadUrl = URL.createObjectURL(data as Blob)
-    avatarImg.src = downloadUrl
-}
-// show image on start up if avatar_url is defined
-if (avatarUrl.value) {
-    showImg(avatarUrl.value)
+// Función para mostrar imagen a partir de la ruta almacenada
+const showImg = async (path) => {
+  const { data, error } = await supabase.storage.from('avatars').download(path)
+  if (error) {
+    alert(`Error ${JSON.stringify(error, null, 2)}`)
+    return
+  }
+  const downloadUrl = URL.createObjectURL(data)
+  avatarImg.src = downloadUrl
 }
 
+// Mostrar la imagen inicial si existe
+if (avatarUrl.value) {
+  showImg(avatarUrl.value)
+}
+
+// Manejo del cambio de foto
 avatarInput.addEventListener('change', async (e) => {
-    const [file] = (e.target as HTMLInputElement).files ?? []
-    if (!file){
-        alert('No file available')
-        return
-    }
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${URL.createObjectURL(new Blob([])).slice(-36)}.${fileExt}`
-    let uploadRes = await supabase.storage.from('avatars').upload(fileName, file)
-    const { error, data } = uploadRes
-    if (error) {
-        alert(`Error ${JSON.stringify(error, null, 2)}`)
-    }
-    if (data) {
-        const { path } = data
-        showImg(path)
-        avatarUrl.value = path
-    }
-    
+  const [file] = e.target.files ?? []
+  if (!file) {
+    alert('No file available')
+    return
+  }
+  const fileExt = file.name.split('.').pop()
+  // Genera un nombre único a partir de un blob URL
+  const fileName = `${URL.createObjectURL(new Blob([])).slice(-36)}.${fileExt}`
+  let uploadRes = await supabase.storage.from('avatars').upload(fileName, file)
+  const { error, data } = uploadRes
+  if (error) {
+    alert(`Error ${JSON.stringify(error, null, 2)}`)
+  }
+  if (data) {
+    const { path } = data
+    showImg(path)
+    avatarUrl.value = path
+  }
 })
 </script>
